@@ -5,8 +5,6 @@ export async function extractRepoInfoFromUrl(repoUrl: string){
         const lastTwo : string[] = pathSegments.slice(-2);
         const [owner , repo] = lastTwo;
         return {owner, repo};
-        
-        
     } catch (error) {
         console.error("Error extracting repository information:", error);
         return null;

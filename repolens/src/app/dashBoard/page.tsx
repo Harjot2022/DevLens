@@ -1,4 +1,7 @@
 "use client";
+
+import { Button } from "@/components/ui/button";
+import{Input} from "@/components/ui/input";
 import axios from "axios";
 import {useState} from "react";
 
@@ -10,7 +13,9 @@ interface Repo {
   forks: number;
 }
 
-export default function Home() {
+
+export default function Dashboard(){
+
   const[RepoInfo, setRepoInfo] = useState<Repo | null>(null);
   const[repoUrl, setRepoUrl] = useState("");
   const[loading, setLoading] = useState(false);
@@ -45,21 +50,22 @@ export default function Home() {
   }
 }
 
-return (
+  return(
+    
     <div>
-      <input 
-        type="text" 
-        placeholder="enter github url..." 
-        className="w-full p-2 border border-gray-300 rounded-md mb-4" 
-        value={repoUrl}
+      <div className="flex items-center justify-between px-8 py-2 sticky top-0 " > 
+        <Input placeholder="Enter GitHub repository Url "
+         className = "mx-4 w-full" 
+         value={repoUrl}
         onChange={(e) => setRepoUrl(e.target.value)}
-      />
-      <button className="px-4 py-2 bg-blue-500 text-white rounded-md"
-      onClick={analyzeRepo} disabled={loading} >
+        />
+        <Button variant="secondary" 
+          onClick={analyzeRepo} 
+          disabled={loading} >
         {loading ? "Analyzing...": "Analyze"}
-      </button>
-      <p>{repoUrl}</p>
-
+        </Button>
+      </div>
+      
       <div>
         {RepoInfo && (
           <ol>
@@ -72,5 +78,5 @@ return (
         )}
       </div> 
     </div>
-  );
+  )
 }
