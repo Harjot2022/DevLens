@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import{Input} from "@/components/ui/input";
 import axios from "axios";
 import {useState} from "react";
+import{RepoCard} from "@/components/ui/dashBoard/repo-card";
 
 interface Repo {
-  repo: string;
+  name: string;
   owner: string;
   description: string;
   stars: number;
@@ -68,15 +69,10 @@ export default function Dashboard(){
       
       <div>
         {RepoInfo && (
-          <ol>
-            <p>Repo Name: {RepoInfo?.repo}</p>
-            <p>Owner: {RepoInfo?.owner}</p>
-            <p>Description: {RepoInfo?.description}</p>
-            <p>Stars: {RepoInfo?.stars}</p>
-            <p>Forks: {RepoInfo?.forks}</p>
-          </ol>
+          <RepoCard repoInfo={RepoInfo} />
         )}
       </div> 
     </div>
+
   )
 }

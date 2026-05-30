@@ -43,8 +43,8 @@ export async function POST(request: Request){
     console.log(readmeData);
 
     return NextResponse.json({
+        name: repoInfo.repo,
         owner: repoInfo.owner,
-        repo: repoInfo.repo,
         description: githubData.description,
         stars: githubData.stargazers_count,
         forks: githubData.forks_count,
