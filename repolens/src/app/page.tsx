@@ -1,76 +1,25 @@
 "use client";
-import axios from "axios";
-import {useState} from "react";
 
-interface Repo {
-  repo: string;
-  owner: string;
-  description: string;
-  stars: number;
-  forks: number;
-}
+import { signIn, signOut, useSession } from "next-auth/react";
 
-export default function Home() {
-  const[RepoInfo, setRepoInfo] = useState<Repo | null>(null);
-  const[repoUrl, setRepoUrl] = useState("");
-  const[loading, setLoading] = useState(false);
+export default function AuthButton() {
+  const { data: session } = useSession();
 
-  function validateGitHubUrl(repoUrl: string): string {
-  const githubRegex = /^https?:\/\/(www\.)?github\.com\/.+/;
-
-  if (!githubRegex.test(repoUrl.trim())) {
-    return "Invalid GitHub URL";
-  }
-
-  return "Valid GitHub URL";
-}
-
-  async function analyzeRepo(){
-    try {
-    setLoading(true);
-    const validationMessage = validateGitHubUrl(repoUrl);
-    if (validationMessage === "Invalid GitHub URL") {
-      alert(validationMessage);
-      setLoading(false);
-      return;
-    } 
-    console.log("Analyzing repository:", repoUrl);
-    const res = await axios.post("/api/analyze", {url: repoUrl});
-    console.log(res.data);
-    setRepoInfo(res.data);
-    setLoading(false);
-  } catch (error) {
-    console.error("Error analyzing repository:", error);
-    setLoading(false);
-  }
-}
-
-return (
-    <div>
-      <input 
-        type="text" 
-        placeholder="enter github url..." 
-        className="w-full p-2 border border-gray-300 rounded-md mb-4" 
-        value={repoUrl}
-        onChange={(e) => setRepoUrl(e.target.value)}
-      />
-      <button className="px-4 py-2 bg-blue-500 text-white rounded-md"
-      onClick={analyzeRepo} disabled={loading} >
-        {loading ? "Analyzing...": "Analyze"}
-      </button>
-      <p>{repoUrl}</p>
-
+  if (session) {
+    return (
       <div>
-        {RepoInfo && (
-          <ol>
-            <p>Repo Name: {RepoInfo?.repo}</p>
-            <p>Owner: {RepoInfo?.owner}</p>
-            <p>Description: {RepoInfo?.description}</p>
-            <p>Stars: {RepoInfo?.stars}</p>
-            <p>Forks: {RepoInfo?.forks}</p>
-          </ol>
-        )}
-      </div> 
-    </div>
+        <p>Welcome {session.user?.name}</p>
+
+        <button onClick={() => signOut()}>
+          Logout
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <button onClick={() => signIn("github", {callbackUrl: "/dashBoard"})}>
+      Sign in with GitHub
+    </button>
   );
 }
